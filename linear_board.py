@@ -3,12 +3,19 @@ from list_utils import *
 
 class  LinearBoard():
 
+    @classmethod
+    def fromList(cls, list):
+        column = cls()
+        if len(list) <= BOARD_LENGTH:    
+            column._line = list
+        return column
+
     def __init__ ( self ):
         self._line = []
 
     def is_full ( self ):
-        if self._line.__len__ () == BOARD_LENGTH:
-            print (self._line.__len__)
+        if len(self._line) == BOARD_LENGTH:
+            print (len(self._line))
             return True
         return False
 
@@ -23,7 +30,7 @@ class  LinearBoard():
         return False
 
     def add ( self, x ):
-        if self._line.__len__ () < BOARD_LENGTH:
+        if len(self._line) < BOARD_LENGTH:
             self._line.append ( x )
 
     def is_tie ( self, x, o):
