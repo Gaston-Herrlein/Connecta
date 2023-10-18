@@ -13,11 +13,20 @@ class SquareBoard ():
     def __init__ (self):
         self._columns = [LinearBoard() for _ in range(BOARD_LENGTH)]
 
-    def __repr__(self):
+    def __repr__ (self):
         return f'{self.__class__}: {self._columns}'
     
-    def __len__(self):
+    def __len__ (self):
         return len (self._columns)
+    
+    def __eq__ (self, other):
+        if not isinstance (other, self.__class__):
+            return False
+        else:
+            return self._columns == other._columns
+        
+    def __hash__(self) -> int:
+        return hash (self._columns)
 
     def is_full(self):
         result = True

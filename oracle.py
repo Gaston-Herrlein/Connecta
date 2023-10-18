@@ -5,6 +5,9 @@ class ColumnRecommendation ():
     def __init__ (self, index, classification):
         self.index = index
         self.classification = classification
+
+    def __repr__(self) -> str:
+        return f'{self.__class__} index({self.index}), {self.classification}'
     
     def __eq__ (self, other):
         if not isinstance (other, self.__class__):

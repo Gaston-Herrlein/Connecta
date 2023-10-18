@@ -5,7 +5,7 @@ from settings import ColumnClassification
 
 def test_base_oracle():
     board = SquareBoard.fromList([[None, None, None, None]])
-    expected = [ColumnRecommendation(0, ColumnClassification.FULL)]
+    expected = [ColumnRecommendation(0, ColumnClassification.MAYBE)]
 
     rappel = BaseOracle()
 
