@@ -12,6 +12,9 @@ class  LinearBoard():
 
     def __init__ ( self ):
         self._line = []
+        for i in range(BOARD_LENGTH):
+            self._line.append (None)
+            
 
     def __eq__ (self, other):
         if not isinstance (other, self.__class__):
