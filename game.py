@@ -1,33 +1,57 @@
 import pyfiglet
-from settings import RoundType, DifficultyLevel
+from settings import RoundType
 from match import Match
 from player import Player, HumanPlayer
 from square_board import SquareBoard
 
 class Game ():
     def __init__ (self, round_type = RoundType.COMPUTER_VS_COMPUTER, match = Match(Player('Player_1'), Player('Player_2'))) -> None:
+        """
+        Inicializamos la clase con valores preestablecidos que posteriormente podra modificar el jugador
+        """
         self.round_type = round_type
         self.match = match
         self.board = SquareBoard ()
 
 
     def start (self):
+        """
+        Metodo que inicializa el juego. 
+        Primero imprime el logo
+        Segundo configura la partida el usuario
+        Tercero iniciamos el loop principal del juego
+        """
         self.print_logo()
         self._configure_by_user()
         self._start_game_loop ()
 
     def print_logo(self):
+        """
+        Metodo que utiliza la libreria 'pyfiglet' para imprimir el logo
+        """
         logo = pyfiglet.Figlet (font = 'stop')
         print(logo.renderText('Connecta'))
 
     def _configure_by_user (self):
-        self._get_round_type()
+        """
+        Metodo que configura la partida segun preferencias del usuario
+        Primero se configura el tipo de partida
+        Segundo se configura la instancia match segun lo que haya elegido el usuario
+        """
+        self._set_round_type()
         self.match = self._make_match()
 
-    def _get_round_type (self):
-        print ('SELECT TYPE OF ROUND: ')
-        print ('1) COMPUTER VS COMPUTER')
-        print ('2) COMPUTER VS HUMAN')
+    def _set_round_type (self):
+        """
+        Selecciona el tipo de partida CPU-CPU o CPU-Humano.
+        Este metodo modifica directamente el atriburo 'round_type'
+        """
+        
+        print ("""
+        SELECT TYPE OF ROUND:
+        1) COMPUTER VS COMPUTER')
+        2) COMPUTER VS HUMAN
+        """)
 
         response = ""
         while response != "1" and response != "2":
@@ -40,7 +64,9 @@ class Game ():
         
     def _make_match(self):
         """
-        El PLayer 1 sera siempre robot
+        Metodo que define el player 2 segun haya que haya elegido el jugador en el metodo '_get_round_typy()'
+        El PLayer 1 sera siempre robot.
+        Este metodo retorna la partida (match) con los jugadores pertinentes
         """
         player1 = Player ('Player1')
         if self.round_type == RoundType.COMPUTER_VS_COMPUTER:
