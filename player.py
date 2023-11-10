@@ -13,14 +13,28 @@ def _is_int (col):
     try:
         nume = int(col)
         return True
-    except:
+    except: 
         return False 
 
 class Player ():
-    def __init__(self, name, char, oracle = BaseOracle()) -> None:
+    def __init__(self, name, char = None, opponent = None,  oracle = BaseOracle()) -> None:
         self.name = name
         self.char = char
+        self.opponent = opponent
         self._oracle = oracle
+
+    @property
+    def opponent (self):
+        return self._opponent
+    
+    @opponent.setter
+    def opponent (self, other):
+        if other != None:
+            self._opponent = other
+            other._opponent = self
+
+    def __repr__(self) -> str:
+        return f'{self.name}'
 
     def play (self, board):
         (best, recommendation) = self._ask_oracle (board)
@@ -39,7 +53,7 @@ class Player ():
         return valid[0]
 
 class HumanPlayer (Player):
-    def __init__ (self, name, char):
+    def __init__ (self, name, char = None):
         super.__init__(name, char)
     
     def _ask_oracle (self, board):
