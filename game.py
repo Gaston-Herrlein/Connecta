@@ -1,8 +1,10 @@
 import pyfiglet
-from settings import RoundType
+from settings import BOARD_LENGTH, RoundType
 from match import Match
 from player import Player, HumanPlayer
 from square_board import SquareBoard
+from list_utils import reverse_matrix
+from beautifultable import BeautifulTable
 
 class Game ():
     def __init__ (self, round_type = RoundType.COMPUTER_VS_COMPUTER, match = Match(Player('Player_1'), Player('Player_2'))) -> None:
@@ -108,7 +110,13 @@ class Game ():
             f'\n{player.name} ({player.char}) has moved in column #{player.last_moves[0]}\n')
 
     def display_board (self):
-        print (self.board)
+        matrix = self.board.as_matrix()
+        matrix = reverse_matrix(matrix)
+
+        bt = BeautifulTable()
+        for col in matrix:
+            bt.columns.append(col)
+        bt.columns.header = [str(i) for i in range(BOARD_LENGTH)]
 
     def display_result (self):
         winner = self.match.get_winner(self.board)
