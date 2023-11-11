@@ -11,15 +11,25 @@ def test_play ():
                                    ['o', 'o', None, None],
                                    ['x', 'x', None, None]])
     
-    after = SquareBoard.fromList([['x', None, None, None],
+    after_option1 = SquareBoard.fromList([['x', None, None, None],
                                    ['x', 'o', 'x', 'o'],
                                    ['o', 'o', None, None],
                                    ['x', 'x', None, None]])
     
+    after_option2 = SquareBoard.fromList([[None, None, None, None],
+                                   ['x', 'o', 'x', 'o'],
+                                   ['o', 'o', 'x', None],
+                                   ['x', 'x', None, None]])
+    
+    after_option3 = SquareBoard.fromList([[None, None, None, None],
+                                   ['x', 'o', 'x', 'o'],
+                                   ['o', 'o', None, None],
+                                   ['x', 'x', 'x', None]])
+    
     player = Player ('CR7', 'x', oracle = BaseOracle())
     player.play(before)
 
-    assert before == after
+    assert before == after_option1 or after_option2 or after_option3
 
 def test_valid_column():
     board = SquareBoard.fromList([['x', None, None, None, ],

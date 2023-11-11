@@ -57,7 +57,7 @@ class Player ():
         que posteriormente se utilizara para 'aprender de los errores'
         """
         board.add (self.char, index)
-        self.last_move.add(index)
+        self.last_move.append(index)
 
     def _ask_oracle (self, board):
         """
