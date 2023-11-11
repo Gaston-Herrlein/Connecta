@@ -1,6 +1,6 @@
 from oracle import BaseOracle, ColumnRecommendation
 from settings import ColumnClassification, BOARD_LENGTH
-
+import random
 
 def _is_within_column_range (col):
     return (col>=0 and col < BOARD_LENGTH) 
@@ -76,7 +76,7 @@ class Player ():
         Posteriormente este metodo se sobreescribira para una respuesta mas util
         """
         valid = list(filter(lambda x: x.classification != ColumnClassification.FULL, recommendations))
-        return valid[0]
+        return random.choice(valid)
 
 #Clase que hereda de Player y se utilizara con los jugadores humanos
 class HumanPlayer (Player):
