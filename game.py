@@ -106,10 +106,16 @@ class Game ():
         return is_game_over
     
     def display_move (self, player):
+        """
+        Muestra por pantalla el ultimo movimiento
+        """
         print(
             f'\n{player.name} ({player.char}) has moved in column #{player.last_moves[0]}\n')
 
     def display_board (self):
+        """
+        Muestra por pantalla el tablero actual
+        """
         matrix = self.board.as_matrix()
         matrix = reverse_matrix(matrix)
 
@@ -119,6 +125,9 @@ class Game ():
         bt.columns.header = [str(i) for i in range(BOARD_LENGTH)]
 
     def display_result (self):
+        """
+        Muestra por pantalla el resultado de la partida
+        """
         winner = self.match.get_winner(self.board)
         if winner != None:
             print(f'\n{winner.name} ({winner.char}) wins!!!')

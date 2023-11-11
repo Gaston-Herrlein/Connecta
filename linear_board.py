@@ -53,16 +53,9 @@ class  LinearBoard():
 
     def is_victory (self, x):
         """
-        Metodo que recive un caracter y evalua si hay una victoria de ese caracter
+        Metodo que recibe un caracter y evalua si hay una victoria de ese caracter
         """
-        if self._line.count(x) >= VICTORY_STRICK:
-            count = 0
-            for i in self._line:
-                if i == x:
-                    count += 1
-            if count >= VICTORY_STRICK:
-                return True
-        return False
+        return find_streak (self._line, x)
 
     def add (self, char):
         """
