@@ -28,7 +28,7 @@ class Player ():
         self.char = char
         self.opponent = opponent
         self._oracle = oracle
-        self.last_move = []
+        self.last_moves = []
 
     @property
     def opponent (self):
@@ -57,7 +57,7 @@ class Player ():
         que posteriormente se utilizara para 'aprender de los errores'
         """
         board.add (self.char, index)
-        self.last_move.append(index)
+        self.last_moves.append(index)
 
     def _ask_oracle (self, board):
         """
@@ -81,7 +81,7 @@ class Player ():
 #Clase que hereda de Player y se utilizara con los jugadores humanos
 class HumanPlayer (Player):
     def __init__ (self, name, char = None):
-        super.__init__(name, char)
+        super().__init__(name, char)
     
     def _ask_oracle (self, board):
         """
@@ -90,7 +90,7 @@ class HumanPlayer (Player):
         """
         while True:
             raw = input ("Selecciona una columna: ")
-            validation = _is_int(raw) and _is_within_column_range (int(raw)) and _is_non_full_column (int(raw))
+            validation = _is_int(raw) and _is_within_column_range (int(raw)) and _is_non_full_column (board, int(raw))
             if validation:
                 pos = int(raw)
                 return (ColumnRecommendation(pos, None), None)

@@ -51,13 +51,13 @@ class Game ():
         
         print ("""
         SELECT TYPE OF ROUND:
-        1) COMPUTER VS COMPUTER')
+        1) COMPUTER VS COMPUTER
         2) COMPUTER VS HUMAN
         """)
 
         response = ""
         while response != "1" and response != "2":
-            response = input ('PLEASE TYPE EITHER 1 OR 2')
+            response = input ('PLEASE TYPE EITHER 1 OR 2 \n\t')
         
         if response == "1":
             self.round_type = RoundType.COMPUTER_VS_COMPUTER
@@ -94,7 +94,6 @@ class Game ():
                 self.display_result ()
                 break
 
-
     def _is_game_over (self):
         """
         El juego termina cuando hay un empate (tablero lleno) o cuando hay un ganador
@@ -110,7 +109,7 @@ class Game ():
         Muestra por pantalla el ultimo movimiento
         """
         print(
-            f'\n{player.name} ({player.char}) has moved in column #{player.last_moves[0]}\n')
+            f'\n{player.name} ({player.char}) has moved in column #{player.last_moves[(len(player.last_moves)-1)]}\n')
 
     def display_board (self):
         """
@@ -123,6 +122,7 @@ class Game ():
         for col in matrix:
             bt.columns.append(col)
         bt.columns.header = [str(i) for i in range(BOARD_LENGTH)]
+        print (bt)
 
     def display_result (self):
         """
