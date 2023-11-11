@@ -35,13 +35,13 @@ def test_is_game_over():
                                        [None, None, None, None, ]])
 
     game.board = win_x
-    assert game._has_winner_or_tie() == True
+    assert game._is_game_over() == True
 
     game.board = win_o
-    assert game._has_winner_or_tie() == True
+    assert game._is_game_over() == True
 
     game.board = tie
-    assert game._has_winner_or_tie() == True
+    assert game._is_game_over() == True
 
     game.board = unfinished
-    assert game._has_winner_or_tie() == False
+    assert game._is_game_over() == False

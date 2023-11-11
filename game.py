@@ -92,8 +92,16 @@ class Game ():
                 self.display_result ()
                 break
 
+
     def _is_game_over (self):
-        pass
+        """
+        El juego termina cuando hay un empate (tablero lleno) o cuando hay un ganador
+        """
+        is_game_over = False
+
+        if self.board.is_full() or self.board.is_victory('x') or self.board.is_victory('o'):
+            is_game_over = True
+        return is_game_over
     
     def display_move (self):
         pass
