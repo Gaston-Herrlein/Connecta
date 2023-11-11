@@ -1,4 +1,5 @@
 from player import Player
+from square_board import SquareBoard
 
 class Match ():
     def __init__(self, player1, player2):
@@ -28,3 +29,17 @@ class Match ():
         Devuelve el jugador con el caracter que se le envia como parametro
         """
         return self._players[char]
+    
+    def get_winner (self, board):
+        """
+        Dado un tablero, evalua que jugador (Player1 o Player2, resulta vencedor).
+        En caso que no haya vencedor, devuelve None
+        """
+        if board.is_victory ('x'):
+            return self.get_player ('x')
+        
+        elif board.is_victory ('o'):
+            return self.get_player ('o')
+        
+        else:
+            return None

@@ -85,7 +85,7 @@ class Game ():
             current_player = self.match.next_player
             current_player.play (self.board)
             
-            self.display_move ()
+            self.display_move (current_player)
             self.display_board ()
 
             if self._is_game_over ():
@@ -103,11 +103,17 @@ class Game ():
             is_game_over = True
         return is_game_over
     
-    def display_move (self):
-        pass
+    def display_move (self, player):
+        print(
+            f'\n{player.name} ({player.char}) has moved in column #{player.last_moves[0]}\n')
 
     def display_board (self):
-        pass
+        print (self.board)
 
     def display_result (self):
-        pass
+        winner = self.match.get_winner(self.board)
+        if winner != None:
+            print(f'\n{winner.name} ({winner.char}) wins!!!')
+        else:
+            print(
+                f'\nA tie between {self.match.get_player("x").name} (x) and {self.match.get_player("o").name} (o)!')

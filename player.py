@@ -1,6 +1,7 @@
 from oracle import BaseOracle, ColumnRecommendation
 from settings import ColumnClassification, BOARD_LENGTH
 
+
 def _is_within_column_range (col):
     return (col>=0 and col < BOARD_LENGTH) 
     
@@ -27,6 +28,7 @@ class Player ():
         self.char = char
         self.opponent = opponent
         self._oracle = oracle
+        self.last_move = []
 
     @property
     def opponent (self):
@@ -51,9 +53,11 @@ class Player ():
     
     def _play_on (self, board, index):
         """
-        Metodo para realizar la jugada
+        Metodo para realizar la jugada. Y guardar la ultima jugada, 
+        que posteriormente se utilizara para 'aprender de los errores'
         """
         board.add (self.char, index)
+        self.last_move.add(index)
 
     def _ask_oracle (self, board):
         """
