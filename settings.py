@@ -7,8 +7,10 @@ VICTORY_STRICK = 3
 
 #Enumeracion que indica si conviene jugar en esa columna o esta llena (MAYBE, FULL respectivamente)
 class ColumnClassification (Enum):
-    MAYBE = auto()
-    FULL = auto()
+    WIN = 3
+    LOSE = 2
+    MAYBE = 1
+    FULL = 0
 
 #Enumeracion que indica el tipo de partida
 class RoundType (Enum):
@@ -19,4 +21,4 @@ class RoundType (Enum):
 class DifficultyLevel (Enum):
     LOW = auto ()
     MEDIUM = auto ()
-    HIGH = auto ()
+    HARD = auto ()

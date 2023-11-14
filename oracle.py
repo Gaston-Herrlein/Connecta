@@ -1,35 +1,24 @@
-from square_board import SquareBoard
+# from square_board import SquareBoard
 from settings import ColumnClassification
+from copy import deepcopy
 
 #Clase que alverga los metodos que nos recomiendan en que posicion jugar
 class ColumnRecommendation ():
     def __init__ (self, index, classification):
-        """
-        Inicializador de la clase
-        """
         self.index = index
         self.classification = classification
 
     def __repr__(self) -> str:
-        """
-        Dunder para representar la clase
-        """
         return f'{self.__class__} index({self.index}), {self.classification}'
-    
+
     def __eq__ (self, other):
-        """
-        Dunder necesario para comparar objetos de la misma clase
-        """
         if not isinstance (other, self.__class__):
             return False
-        return (self.index, self.classification) == (other.index, other.classification)
-    
+        return self.classification == other.classification
+
     def __hash__(self) -> int:
-        """
-        Dunder para obtener el hash del objeto/clase
-        """
-        return hash ((self.index, self.classification))
-    
+        return hash (self.classification)
+
     def _set_classification(self, classification):
         """
         Establece la clasificacion enviada como parametro en el atributo de la clase
@@ -56,3 +45,42 @@ class BaseOracle ():
         if board._columns[i].is_full():
             classification._set_classification(ColumnClassification.FULL)
         return classification
+
+class SmartOracle (BaseOracle):
+    def _get_column_recommendation (self, board, i, player):
+        """
+        Mejora la clasificaion dada por la clase 'BaseOracle'.
+        Si originalmente la clasificaicon es 'MAYBE' comprobamos si hay un movimiento ganador o perdedor 
+        y reclasificamos(WIN, LOSE)
+        """
+        recommendation = super()._get_column_recommendation(board, i, player)
+        if recommendation.classification == ColumnClassification.MAYBE:
+            if self._is_winning_move(board, i, player):
+                recommendation._set_classification(ColumnClassification.WIN)
+            elif self._is_losing_move(board, i, player):
+                recommendation._set_classification(ColumnClassification.LOSE)    
+        return recommendation
+    
+    def _is_winning_move(self, board, i, player):
+        """
+        Sobre una copia del tablero agrego la ficha en la columna indicada por parametro
+        y compruebo si hay una victoria
+        """
+        flag = False
+        board_copy = deepcopy(board)
+        board_copy.add(player.char, i)
+        if board_copy.is_victory(player.char):
+            flag = True
+        return flag
+    
+    def _is_losing_move (self, board, i, player):
+        """
+        Sobre una copia del tablero agrego la ficha, DEL OPONENTE, en la columna indicada por parametro
+        y compruebo si hay una vctoria DEL OPONENTE.
+        """
+        flag = False
+        board_copy = deepcopy(board)
+        board_copy.add(player.opponent.char, i)
+        if board_copy.is_victory(player.char):
+            flag = True
+        return flag

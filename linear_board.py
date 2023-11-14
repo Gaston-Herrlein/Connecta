@@ -1,4 +1,4 @@
-from settings import BOARD_LENGTH, VICTORY_STRICK
+from settings import BOARD_LENGTH
 from list_utils import find_streak
 
 class  LinearBoard():
@@ -15,16 +15,15 @@ class  LinearBoard():
 
     def __init__ ( self ):
         """
-        Inicializamos la clase con una lista de longitud 'BOARD_LENGTH' pero vacia ('None')
+        Inicializamos la clase con una lista de longitud 'BOARD_LENGTH' vacia ('None')
         """
         self._line = []
         for i in range(BOARD_LENGTH):
             self._line.append (None)
             
-
     def __eq__ (self, other):
         """
-        Metodo especial (dunder), que nos permite igualar dos objetos de la misma clase 
+        Dunder que nos permite igualar dos objetos de la misma clase 
         """
         if not isinstance (other, self.__class__):
             return False
@@ -39,27 +38,29 @@ class  LinearBoard():
 
     def __repr__(self) -> str:
         """
-        Dunder para representar un LinearBoard
+        Dunder para representar un LinearBoard por consola
         """
         return f'{self._line}'    
 
     def is_full (self):
         """
-        Metodo que sirve para saber si una LinearBoard esta completa o no"""
+        Nos dice si el LinearBoard esta completa. Devuelve un Booleano
+        """
+        flag = False
         line_aux = list(filter(lambda x: x != None, self._line))
         if len(line_aux) == BOARD_LENGTH:
-            return True
-        return False
+            flag = True
+        return flag
 
     def is_victory (self, x):
         """
-        Metodo que recibe un caracter y evalua si hay una victoria de ese caracter
+        Recibe un caracter y evalua si hay una victoria de ese caracter
         """
         return find_streak (self._line, x)
 
     def add (self, char):
         """
-        Metodo que agrega el caracter que se le envia como parametro al LinearBoard
+        Agrega el caracter que recibe como parametro
         """
         if not self.is_full():
             i = self._line.index(None)
@@ -67,11 +68,10 @@ class  LinearBoard():
 
     def is_tie ( self, x, o):
         """
-        Metodo que a partir de dos caracteres que toma como parametro, nos indica si hay empate
-        Para esto utilizamos una funcion de list_utils (find_streake()) para saber si hay una racha de VICTORY_STRIKE 
+        Recibe dos caracteres y nos indica si hay empate 
         """
         tie = False
-        if not find_streak (self._line, x) and not find_streak (self._line, o):
+        if not self.is_victory (x) and not self.is_victory (o):
             tie = True
         return tie
 

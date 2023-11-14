@@ -3,7 +3,7 @@ from settings import VICTORY_STRICK
 
 def find_streak(list, needle, n=VICTORY_STRICK):
     """
-    Metodo que analisa una lista dada como argumento y retorna True/False segun encuentre una seguidilla de 'n' 'needle'
+    Recibe una lista y retorna True/False segun encuentre una seguidilla de 'n' 'needle'
     """
     if n >= 0:
         index = 0
@@ -25,7 +25,7 @@ def find_streak(list, needle, n=VICTORY_STRICK):
 
 def nth_elements (matrix, n=0):
     """
-    Devuele el enecimo elemento de una cada lista de una matriz. En caso que la lista sea demasiado corta, devuelve None
+    Devuele el enecimo elemento de cada lista de una matriz. En caso que la lista sea demasiado corta, devuelve None
     """
     return list (map (lambda element: element[n] if len (element) > n else None, matrix))
 
@@ -44,7 +44,7 @@ def transpose (matrix):
 
 def one_displace (l):
     """
-    Este metodo recibe una lista y desplaza 1 posicion hacia la derecha sus elementos
+    Recibe una lista y desplaza 1 posicion hacia la derecha cada elementos
     """
     #Creamos una copia de la lista para no alterar la original
     l_copy = list (map(lambda lista: lista, l))
@@ -62,7 +62,7 @@ def one_displace (l):
     
 def displace (l, nth=0, filler=None):
     """
-    Metodo que haciendo uso de 'one_displace()' desplaza 'n' lugares los elementos de una lista
+    Desplaza 'n' lugares los elementos de una lista
     Completa los espacion con filler ('None' por defecto) 
     """
     if nth == 0:
@@ -80,8 +80,7 @@ def displace (l, nth=0, filler=None):
 
 def displace_matrix(matrix):
     """
-    Metodo que haciendo uso de 'displace()' desplaza 'n' lugares los elementos de una matriz
-    Este metodo se utiliza con el fin de detectar una una victoria en diagonal (ascendente o descendente)
+    Desplaza 'n' lugares los elementos de una matriz
     """
     disp = []
     for i in range(len(matrix)):
@@ -104,3 +103,17 @@ def reverse_matrix (m):
         rm.append (reverse_list(col))
     
     return rm
+
+def all_same (l):
+    """
+    Dada una lista, devuelve True si todos sus elementos son iguales.
+    En caso de una lista vacia devuelve True
+    """
+    flag = True
+    if len (l) != 0:
+        reference = l[0]
+        for i in l:
+            if reference != i:
+                flag = False
+                break
+    return flag

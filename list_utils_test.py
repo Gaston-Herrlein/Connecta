@@ -1,5 +1,7 @@
 import pytest
 from list_utils import *
+from settings import ColumnClassification
+from oracle import ColumnRecommendation
 
 def test_find_streak ():
     needle = 1
@@ -69,3 +71,16 @@ def test_reverse_matrix():
 
     assert reverse_matrix (l1) == [[3, 2, 1, 0], [7, 6, 5, 4], [11, 10, 9, 8], [15, 14, 13, 12]]
     assert reverse_matrix (l2) == [['b', 'a'], [None, 1], [9, 8]]
+
+def test_all_same():
+    l1 = [0, 1, 32, 3, 4]
+    l2 = [['a', 'b'], [1, None], [8, 9]]
+    l3 = [['a', 'b'], ['a', 'b'], ['a', 'b']]
+    l4 = [ColumnRecommendation(1, ColumnClassification.MAYBE), ColumnRecommendation(2, ColumnClassification.MAYBE)]
+    l5 = [ColumnRecommendation(1, ColumnClassification.FULL), ColumnRecommendation(1, ColumnClassification.MAYBE)]
+
+    assert all_same(l1) == False
+    assert all_same(l2) == False
+    assert all_same(l3)
+    assert all_same(l4)
+    assert all_same(l5) == False

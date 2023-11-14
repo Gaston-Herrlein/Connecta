@@ -1,5 +1,6 @@
 from oracle import BaseOracle, ColumnRecommendation
 from settings import ColumnClassification, BOARD_LENGTH
+from list_utils import all_same
 import random
 
 def _is_within_column_range (col):
@@ -16,9 +17,6 @@ def _is_int (col):
         return False 
 
 class Player ():
-    """
-    Juega en un tablero despues de preguntarle al oraculo
-    """
     def __init__(self, name, char = None, opponent = None,  oracle = BaseOracle()) -> None:
         """
         Inicializamos el jugador, por defecto los parametros estan vacios y el oraculo es BaseOracule 
@@ -53,17 +51,16 @@ class Player ():
     
     def _play_on (self, board, index):
         """
-        Metodo para realizar la jugada. Y guardar la ultima jugada, 
-        que posteriormente se utilizara para 'aprender de los errores'
+        Juega en la columna 'index'.
+        Guardar la ultima jugada, que se utilizara para 'aprender de los errores'
         """
         board.add (self.char, index)
         self.last_moves.append(index)
 
     def _ask_oracle (self, board):
         """
-        Metodo para preguntarle al oraculo.
-        Este metodo devuelve 2 parametros, en primer lugar la mejor opcion para jugar y 
-        segundo una lista con todas la recomendaciones por cada columna del tablero
+        Este metodo devuelve un tupla, en primer lugar la mejor opcion para jugar y 
+        segundo una lista con todas la recomendaciones.
         """
         recommendation = self._oracle.get_recommendation(board, self)
         best = self._choose(recommendation)
@@ -71,13 +68,16 @@ class Player ():
 
     def _choose (self, recommendations):
         """
-        Metodo para determinar cual es la mejor opcion. 
-        En primera instancia devuelve el primer valor que encuentra con la recomendaión distinta de FULL.
-        Posteriormente este metodo se sobreescribira para una respuesta mas util
+        Determinar cual es la mejor opcion.
         """
         valid = list(filter(lambda x: x.classification != ColumnClassification.FULL, recommendations))
-        return random.choice(valid)
-
+        #Ordeno la lista
+        valid.sort(key = lambda x: x.classification.value, reverse = True)
+        if all_same(valid):
+            return random.choice(valid)
+        else:
+            return valid[0]
+        
 #Clase que hereda de Player y se utilizara con los jugadores humanos
 class HumanPlayer (Player):
     def __init__ (self, name, char = None):
@@ -85,7 +85,7 @@ class HumanPlayer (Player):
     
     def _ask_oracle (self, board):
         """
-        Para el caso del jugador humano le preguntamos en que columna quiere jugar.
+        Le pregunta al jugador en que columna quiere jugar.
         Si la columna solicitada no esta llena procede a jugar
         """
         while True:

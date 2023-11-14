@@ -1,5 +1,3 @@
-from player import Player
-from square_board import SquareBoard
 
 class Match ():
     def __init__(self, player1, player2):
