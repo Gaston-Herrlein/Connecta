@@ -81,6 +81,6 @@ class SmartOracle (BaseOracle):
         flag = False
         board_copy = deepcopy(board)
         board_copy.add(player.opponent.char, i)
-        if board_copy.is_victory(player.char):
+        if board_copy.is_victory(player.opponent.char):
             flag = True
         return flag
