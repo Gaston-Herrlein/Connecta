@@ -13,25 +13,31 @@ def test_base_oracle():
     assert len(rappel.get_recommendation(board, None)) == len(expected)
     assert rappel.get_recommendation(board, None) == expected
 
-def test_equality ():
+
+def test_equality():
     cr = ColumnRecommendation(2, ColumnClassification.MAYBE)
 
-    assert cr == cr  
-    assert cr == ColumnRecommendation(2, ColumnClassification.MAYBE)  
+    assert cr == cr
+    assert cr == ColumnRecommendation(2, ColumnClassification.MAYBE)
 
     assert cr != ColumnRecommendation(2, ColumnClassification.FULL)
     assert cr == ColumnRecommendation(3, ColumnClassification.MAYBE)
     assert cr != ColumnRecommendation(3, ColumnClassification.FULL)
 
+
 def test_is_winning_move():
-    winner = Player('Xavier', 'x')
-    loser = Player('Otto', 'o')
+    winner = Player("Xavier", "x")
+    loser = Player("Otto", "o")
 
     empty = SquareBoard()
-    almost = SquareBoard.fromList([['o', 'x', 'o', None],
-                                   ['o', 'x', 'o', None],
-                                   ['x', None, None, None],
-                                   [None, None, None, None]])
+    almost = SquareBoard.fromList(
+        [
+            ["o", "x", "o", None],
+            ["o", "x", "o", None],
+            ["x", None, None, None],
+            [None, None, None, None],
+        ]
+    )
     oracle = SmartOracle()
 
     # sobre tablero vacío

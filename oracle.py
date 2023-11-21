@@ -2,22 +2,23 @@
 from settings import ColumnClassification
 from copy import deepcopy
 
-#Clase que alverga los metodos que nos recomiendan en que posicion jugar
-class ColumnRecommendation ():
-    def __init__ (self, index, classification):
+
+# Clase que alverga los metodos que nos recomiendan en que posicion jugar
+class ColumnRecommendation:
+    def __init__(self, index, classification):
         self.index = index
         self.classification = classification
 
     def __repr__(self) -> str:
-        return f'{self.__class__} index({self.index}), {self.classification}'
+        return f"{self.__class__} index({self.index}), {self.classification}"
 
-    def __eq__ (self, other):
-        if not isinstance (other, self.__class__):
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
             return False
         return self.classification == other.classification
 
     def __hash__(self) -> int:
-        return hash (self.classification)
+        return hash(self.classification)
 
     def _set_classification(self, classification):
         """
@@ -25,9 +26,10 @@ class ColumnRecommendation ():
         """
         self.classification = classification
 
-#Clase que sera el padre de los futuros oraculos mas 'inteligentes'
-class BaseOracle ():
-    def get_recommendation (self, board, player):
+
+# Clase que sera el padre de los futuros oraculos mas 'inteligentes'
+class BaseOracle:
+    def get_recommendation(self, board, player):
         """
         Establece una recomendacion para cada columna del tablero
         """
@@ -36,21 +38,22 @@ class BaseOracle ():
             recommendation.append(self._get_column_recommendation(board, i, player))
         return recommendation
 
-    def _get_column_recommendation (self, board, i, player):
+    def _get_column_recommendation(self, board, i, player):
         """
         Originalmente clasifica la columna como MAYBE ('quizas sea buena idea jugar aquí').
         Si la columna esta llena se cambia a FULL ('no se puede jugar aquí')
         """
-        classification = ColumnRecommendation (i, ColumnClassification.MAYBE)
+        classification = ColumnRecommendation(i, ColumnClassification.MAYBE)
         if board._columns[i].is_full():
             classification._set_classification(ColumnClassification.FULL)
         return classification
 
-class SmartOracle (BaseOracle):
-    def _get_column_recommendation (self, board, i, player):
+
+class SmartOracle(BaseOracle):
+    def _get_column_recommendation(self, board, i, player):
         """
         Mejora la clasificaion dada por la clase 'BaseOracle'.
-        Si originalmente la clasificaicon es 'MAYBE' comprobamos si hay un movimiento ganador o perdedor 
+        Si originalmente la clasificaicon es 'MAYBE' comprobamos si hay un movimiento ganador o perdedor
         y reclasificamos(WIN, LOSE)
         """
         recommendation = super()._get_column_recommendation(board, i, player)
@@ -58,9 +61,9 @@ class SmartOracle (BaseOracle):
             if self._is_winning_move(board, i, player):
                 recommendation._set_classification(ColumnClassification.WIN)
             elif self._is_losing_move(board, i, player):
-                recommendation._set_classification(ColumnClassification.LOSE)    
+                recommendation._set_classification(ColumnClassification.LOSE)
         return recommendation
-    
+
     def _is_winning_move(self, board, i, player):
         """
         Sobre una copia del tablero agrego la ficha en la columna indicada por parametro
@@ -72,8 +75,8 @@ class SmartOracle (BaseOracle):
         if board_copy.is_victory(player.char):
             flag = True
         return flag
-    
-    def _is_losing_move (self, board, i, player):
+
+    def _is_losing_move(self, board, i, player):
         """
         Sobre una copia del tablero agrego la ficha, DEL OPONENTE, en la columna indicada por parametro
         y compruebo si hay una vctoria DEL OPONENTE.

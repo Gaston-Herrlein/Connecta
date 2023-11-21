@@ -2,42 +2,46 @@ import pytest
 from linear_board import *
 from settings import *
 
-def test_empty_board ():
+
+def test_empty_board():
     empty = LinearBoard()
     assert empty != None
     assert empty.is_full() == False
-    assert empty.is_victory('x') == False
+    assert empty.is_victory("x") == False
 
-def test_add ():
+
+def test_add():
     b = LinearBoard()
     for i in range(BOARD_LENGTH):
-        b.add ('x')
+        b.add("x")
     assert b.is_full() == True
 
-def test_victory ():
+
+def test_victory():
     b = LinearBoard()
     for i in range(VICTORY_STRICK):
-        b.add ('x')
-    
-    assert b.is_victory('x') == True
-    assert b.is_victory('o') == False
+        b.add("x")
+
+    assert b.is_victory("x") == True
+    assert b.is_victory("o") == False
 
 
-def test_tie ():
+def test_tie():
     b = LinearBoard()
-    
-    b.add('o')
-    b.add('o')
-    b.add('x')
-    b.add('o')
 
-    assert b.is_tie('x', 'o') == True
+    b.add("o")
+    b.add("o")
+    b.add("x")
+    b.add("o")
 
-def test_add_to_full ():
+    assert b.is_tie("x", "o") == True
+
+
+def test_add_to_full():
     full = LinearBoard()
 
     for i in range(BOARD_LENGTH):
-        full.add ('x')
-    
-    full.add ('x')
+        full.add("x")
+
+    full.add("x")
     assert full.is_full() == True
