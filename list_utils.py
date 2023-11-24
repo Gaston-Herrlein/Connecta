@@ -125,3 +125,35 @@ def all_same(l):
                 flag = False
                 break
     return flag
+
+
+def collapse_list(l):
+    """
+    Metodo que conbierte una lista a string, reemplazando los None por "."
+    """
+    return "".join(map(lambda x: str(x) if x != None else ".", l))
+
+
+def collapse_matrix(m):
+    """
+    Metodo que reutiliza collapse_list para convertir matrices en cadena de caracteres. Separadas por "|"
+    """
+    collapse_matrix = ""
+    for l in m:
+        collapse_matrix += collapse_list(l) + "|"
+
+    return collapse_matrix[:-1]
+
+
+def replace_all_in_list(original, old=".", new=None):
+    """
+    Cambia todas las ocurrencias 'old' por 'new'
+    """
+    return list(map(lambda x: new if x == old else x, original))
+
+
+def replace_all_in_matrix(original, old=".", new=None):
+    """
+    Aplica replace_all_in_list a todas las listas
+    """
+    return list(map(lambda x: replace_all_in_list(x, old, new), original))

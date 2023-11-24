@@ -50,6 +50,9 @@ class BaseOracle:
 
 
 class SmartOracle(BaseOracle):
+    def get_recommendation(self, board, player):
+        return super().get_recommendation(board, player)
+
     def _get_column_recommendation(self, board, i, player):
         """
         Mejora la clasificaion dada por la clase 'BaseOracle'.
@@ -87,3 +90,31 @@ class SmartOracle(BaseOracle):
         if board_copy.is_victory(player.opponent.char):
             flag = True
         return flag
+
+
+class MemorizeOracle(SmartOracle):
+    """
+    Clase cuya funcionalidad es recordar todos los tableros y sus
+    respectivas recomendaciones
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._past_recommendations = {}
+
+    def _make_key(self, board_code, player):
+        """
+        Metodo que guarda genera la clave para el diccionario que almacena las recomendaciones.
+        Se tiene en cuenta el tablero (colapsado en un string) y el caracter del jugador
+        """
+        return f"{board_code.raw_code}@{player.char}"
+
+    def get_recommendation(self, board, player):
+        """
+        Sobreescribimos get_recomendation para que memorice el tablero y la recomendacion
+        """
+        key = self._make_key(board.as_code(), player)
+
+        if key not in self._past_recommendations:
+            self._past_recommendations[key] = super().get_recommendation(board, player)
+        return self._past_recommendations[key]

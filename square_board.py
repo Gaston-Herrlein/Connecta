@@ -1,5 +1,6 @@
 from linear_board import LinearBoard
-from list_utils import transpose, displace_matrix, reverse_matrix
+from list_utils import transpose, displace_matrix, reverse_matrix, collapse_matrix
+from string_utils import explode_string_to_matrix
 from settings import BOARD_LENGTH
 
 
@@ -14,6 +15,14 @@ class SquareBoard:
             map(lambda element: LinearBoard.fromList(element), list_of_lists)
         )
         return board
+
+    @classmethod
+    def fromBoardCode(cls, board_code):
+        """
+        De un 'BoardCode' toma el string (raw_code) y lo transforma en un 'SquareBoard'
+        """
+        board = cls()
+        return board.fromList(explode_string_to_matrix(board_code.raw_code))
 
     def __init__(self):
         """
@@ -61,6 +70,12 @@ class SquareBoard:
         Representa el trablero como una lista de listas, en lugar de una lista de LinearBoard
         """
         return list(map(lambda column: column._line, self._columns))
+
+    def as_code(self):
+        """
+        Metodo que devuelve el tablero como cadena de string
+        """
+        return BoardCode(self)
 
     def add(self, char, col):
         """
@@ -119,3 +134,24 @@ class SquareBoard:
         rm = reverse_matrix(m)
         tmp = SquareBoard.fromList(rm)
         return tmp._any_sinking_victory(char)
+
+
+class BoardCode:
+    def __init__(self, board):
+        self._raw_code = collapse_matrix(board.as_matrix())
+
+    @property
+    def raw_code(self):
+        return self._raw_code
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        else:
+            return self.raw_code == other.raw_code
+
+    def __hash__(self):
+        return hash(self.raw_code)
+
+    def __repr__(self):
+        return f"{self.__class__}: {self.raw_code}"
