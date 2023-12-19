@@ -17,12 +17,12 @@ class SquareBoard:
         return board
 
     @classmethod
-    def fromBoardCode(cls, board_code):
+    def fromBoardCode(cls, board_raw_code):
         """
         De un 'BoardCode' toma el string (raw_code) y lo transforma en un 'SquareBoard'
         """
         board = cls()
-        return board.fromList(explode_string_to_matrix(board_code.raw_code))
+        return board.fromList(explode_string_to_matrix(board_raw_code))
 
     def __init__(self):
         """

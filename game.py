@@ -1,11 +1,11 @@
 import pyfiglet
 from settings import BOARD_LENGTH, RoundType, DifficultyLevel
 from match import Match
-from player import Player, HumanPlayer
+from player import Player, ReportingPlayer, HumanPlayer
 from square_board import SquareBoard
 from list_utils import reverse_matrix
 from beautifultable import BeautifulTable
-from oracle import BaseOracle, SmartOracle
+from oracle import BaseOracle, SmartOracle, LearningOracle
 
 
 class Game:
@@ -83,11 +83,11 @@ class Game:
         _levels = {
             DifficultyLevel.LOW: BaseOracle(),
             DifficultyLevel.MEDIUM: SmartOracle(),
-            DifficultyLevel.HARD: SmartOracle(),
+            DifficultyLevel.HARD: LearningOracle(),
         }
 
         if self.round_type == RoundType.COMPUTER_VS_COMPUTER:
-            player1 = Player("Rick", oracle=_levels[DifficultyLevel.MEDIUM])
+            player1 = ReportingPlayer("Rick", oracle=_levels[DifficultyLevel.HARD])
             player2 = Player("Morty")
         else:
             player1 = Player("Rick", oracle=_levels[self._difficulty_level])
@@ -130,7 +130,7 @@ class Game:
         Muestra por pantalla el ultimo movimiento
         """
         print(
-            f"\n{player.name} ({player.char}) has moved in column #{player.last_moves[(len(player.last_moves)-1)]}\n"
+            f"\n{player.name} ({player.char}) has moved in column #{player.last_moves.position}\n"
         )
 
     def display_board(self):

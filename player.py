@@ -1,6 +1,8 @@
-from oracle import BaseOracle, ColumnRecommendation
+from beautifultable import BeautifulTable
+from oracle import SmartOracle, ColumnRecommendation
 from settings import ColumnClassification, BOARD_LENGTH
 from list_utils import all_same
+from move import Move
 import random
 
 
@@ -21,7 +23,7 @@ def _is_int(col):
 
 
 class Player:
-    def __init__(self, name, char=None, opponent=None, oracle=BaseOracle()) -> None:
+    def __init__(self, name, char=None, opponent=None, oracle=SmartOracle()) -> None:
         """
         Inicializamos el jugador, por defecto los parametros estan vacios y el oraculo es BaseOracule
         para posteriormente modificarlo
@@ -30,7 +32,7 @@ class Player:
         self.char = char
         self.opponent = opponent
         self._oracle = oracle
-        self.last_moves = []
+        self.last_moves = None  # Se define como 'None' ya que posteriormente se guarda una clase con el ultimo mov
 
     @property
     def opponent(self):
@@ -50,16 +52,16 @@ class Player:
         Primero le pregunta al oraculo. Guarda una tupla con la mejor opción para jugar y todas las recomendaciones
         Segundo procede a realizar la jugada
         """
-        (best, recommendation) = self._ask_oracle(board)
-        self._play_on(board, best.index)
+        (best, recommendations) = self._ask_oracle(board)
+        self._play_on(board, best.index, recommendations)
 
-    def _play_on(self, board, index):
+    def _play_on(self, board, index, recommendations):
         """
         Juega en la columna 'index'.
         Guardar la ultima jugada, que se utilizara para 'aprender de los errores'
         """
         board.add(self.char, index)
-        self.last_moves.append(index)
+        self.last_moves = Move(index, board.as_code(), recommendations, self)
 
     def _ask_oracle(self, board):
         """
@@ -86,6 +88,19 @@ class Player:
         else:
             return valid[0]
 
+    def display_recommendations(self, board):
+        recs = map(
+            lambda x: str(x.classification).split(".")[1].lower(),
+            self._oracle.get_recommendation(board, self),
+        )
+
+        bt = BeautifulTable()
+        bt.rows.append(recs)
+
+        bt.columns.header = [str(i) for i in range(BOARD_LENGTH)]
+
+        print(bt)
+
 
 # Clase que hereda de Player y se utilizara con los jugadores humanos
 class HumanPlayer(Player):
@@ -98,7 +113,7 @@ class HumanPlayer(Player):
         Si la columna solicitada no esta llena procede a jugar
         """
         while True:
-            raw = input("Selecciona una columna: ")
+            raw = input("Selecciona una columna (o 'h' para ver las recomendaciones): ")
             validation = (
                 _is_int(raw)
                 and _is_within_column_range(int(raw))
@@ -107,3 +122,22 @@ class HumanPlayer(Player):
             if validation:
                 pos = int(raw)
                 return (ColumnRecommendation(pos, None), None)
+
+            elif raw == "h":
+                self.display_recommendations(board)
+
+    def on_win(self):
+        pass
+
+    def on_lose(self):
+        pass
+
+
+class ReportingPlayer(Player):
+    def on_lose(self):
+        """
+        Actualiza la ultima recomendacion del oraculo
+        """
+        board_code = self.last_moves.board_code
+        position = self.last_moves.position
+        self._oracle.update_to_bad(board_code, self, position)

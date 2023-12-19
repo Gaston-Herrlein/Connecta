@@ -1,4 +1,4 @@
-# from square_board import SquareBoard
+from square_board import SquareBoard
 from settings import ColumnClassification
 from copy import deepcopy
 
@@ -82,14 +82,25 @@ class SmartOracle(BaseOracle):
     def _is_losing_move(self, board, i, player):
         """
         Sobre una copia del tablero agrego la ficha, DEL OPONENTE, en la columna indicada por parametro
-        y compruebo si hay una vctoria DEL OPONENTE.
+        y compruebo si hay una victoria DEL OPONENTE.
         """
         flag = False
         board_copy = deepcopy(board)
         board_copy.add(player.opponent.char, i)
+        print(board_copy)
         if board_copy.is_victory(player.opponent.char):
             flag = True
         return flag
+
+    def no_good_options(self, board, player):
+        recommendations = self.get_recommendation(board, player)
+        # for i in range(len(recommendations)):
+        #     if recommendations[i] != ColumnClassification.MAYBE or recommendations[i] != ColumnClassification.WIN:
+        #         good_option = False
+        is_any_maybe = recommendations.count(
+            ColumnRecommendation(0, ColumnClassification.MAYBE)
+        )
+        return is_any_maybe == 0
 
 
 class MemorizeOracle(SmartOracle):
@@ -118,3 +129,14 @@ class MemorizeOracle(SmartOracle):
         if key not in self._past_recommendations:
             self._past_recommendations[key] = super().get_recommendation(board, player)
         return self._past_recommendations[key]
+
+
+class LearningOracle(MemorizeOracle):
+    def update_to_bad(self, board_code, i, player):
+        key = self._make_key(board_code, player)
+        recommendation = self.get_recommendation(
+            SquareBoard.fromBoardCode(board_code), player
+        )
+        recommendation[i] = ColumnRecommendation(i, ColumnClassification.BAD)
+
+        self._past_recommendations[key] = recommendation
