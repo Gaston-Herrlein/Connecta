@@ -107,11 +107,16 @@ class Game:
             self.display_move(current_player)
             self.display_board()
 
-            if self._is_game_over():
+            if self.has_winner_or_tie():
                 self.display_result()
-                break
 
-    def _is_game_over(self):
+                if self.match.is_match_over():
+                    break
+                else:
+                    self.board = SquareBoard()
+                    self.display_board()
+
+    def has_winner_or_tie(self):
         """
         El juego termina cuando hay un empate (tablero lleno) o cuando hay un ganador
         """

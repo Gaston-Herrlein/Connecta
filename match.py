@@ -40,3 +40,17 @@ class Match:
 
         else:
             return None
+
+    def is_match_over(self):
+        """
+        Le preguntamos al usuario si quiere jugar otra partida
+        """
+        finish = True
+        while True:
+            answer = input("Quieres jugar otra partida? (Y/N)").upper()
+            if answer == "Y":
+                finish = False
+                break
+            elif answer == "N":
+                break
+        return finish

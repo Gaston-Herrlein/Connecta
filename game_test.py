@@ -13,7 +13,7 @@ def test_create():
     assert g.board.is_full() == False
 
 
-def test_is_game_over():
+def test_has_winner_or_tie():
     game = Game()
     win_x = SquareBoard.fromList(
         [
@@ -132,13 +132,13 @@ def test_is_game_over():
     )
 
     game.board = win_x
-    assert game._is_game_over() == True
+    assert game.has_winner_or_tie() == True
 
     game.board = win_o
-    assert game._is_game_over() == True
+    assert game.has_winner_or_tie() == True
 
     game.board = tie
-    assert game._is_game_over() == True
+    assert game.has_winner_or_tie() == True
 
     game.board = unfinished
-    assert game._is_game_over() == False
+    assert game.has_winner_or_tie() == False

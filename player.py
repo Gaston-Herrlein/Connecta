@@ -105,6 +105,12 @@ class Player:
 
         print(bt)
 
+    def on_win(self):
+        pass
+
+    def on_lose(self):
+        pass
+
 
 # Clase que hereda de Player y se utilizara con los jugadores humanos
 class HumanPlayer(Player):
@@ -117,7 +123,9 @@ class HumanPlayer(Player):
         Si la columna solicitada no esta llena procede a jugar
         """
         while True:
-            raw = input("Selecciona una columna ('h' para ver las recomendaciones): ")
+            raw = input(
+                "Selecciona una columna ('H' para ver las recomendaciones): "
+            ).upper()
             validation = (
                 _is_int(raw)
                 and _is_within_column_range(int(raw))
@@ -127,14 +135,8 @@ class HumanPlayer(Player):
                 pos = int(raw)
                 return (ColumnRecommendation(pos, None), None)
 
-            elif raw == "h":
+            elif raw == "H":
                 self.display_recommendations(board)
-
-    def on_win(self):
-        pass
-
-    def on_lose(self):
-        pass
 
 
 class ReportingPlayer(Player):

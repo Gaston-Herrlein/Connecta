@@ -116,7 +116,7 @@ class SmartOracle(BaseOracle):
         )
 
         return (
-            is_not_win == 0
+            is_not_win != 0
             or is_everything_lost >= 2
             or (is_everything_lost == 1 and is_not_maybe == 0)
         )
@@ -154,7 +154,7 @@ class LearningOracle(MemorizeOracle):
     def update_to_bad(self, move):
         key = self._make_key(move.board_code, move.player)
         recommendation = self.get_recommendation(
-            SquareBoard.fromBoardCode(move.board_code), move.player
+            SquareBoard.fromBoardCode(move.board_code._raw_code), move.player
         )
         recommendation[move.position] = ColumnRecommendation(
             move.position, ColumnClassification.BAD
