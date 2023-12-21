@@ -4,8 +4,8 @@ from enum import Enum, auto
 # Y el numero consecuentes de caracteres para una victoria
 # PARA TEST USAR -> BOARD_LENGTH = 4
 # PARA TEST USAR -> VICTORY_STRICK = 3
-BOARD_LENGTH = 4
-VICTORY_STRICK = 3
+BOARD_LENGTH = 5
+VICTORY_STRICK = 4
 
 
 # Constante para debugear el juego
