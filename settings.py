@@ -6,6 +6,10 @@ BOARD_LENGTH = 4
 VICTORY_STRICK = 3
 
 
+# Constante para debugear el juego
+DEBUG = True
+
+
 # Enumeracion que indica si conviene jugar en esa columna o esta llena (MAYBE, FULL respectivamente)
 class ColumnClassification(Enum):
     WIN = 4  # Si juega en esa posicion GANA

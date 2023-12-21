@@ -1,6 +1,6 @@
 from beautifultable import BeautifulTable
 from oracle import SmartOracle, ColumnRecommendation
-from settings import ColumnClassification, BOARD_LENGTH
+from settings import ColumnClassification, BOARD_LENGTH, DEBUG
 from list_utils import all_same
 from move import Move
 import random
@@ -32,7 +32,7 @@ class Player:
         self.char = char
         self.opponent = opponent
         self._oracle = oracle
-        self.last_moves = None  # Se define como 'None' ya que posteriormente se guarda una clase con el ultimo mov
+        self.last_moves = []
 
     @property
     def opponent(self):
@@ -60,8 +60,12 @@ class Player:
         Juega en la columna 'index'.
         Guardar la ultima jugada, que se utilizara para 'aprender de los errores'
         """
+        if DEBUG:  # Solo para debug
+            self.display_recommendations(board)
         board.add(self.char, index)
-        self.last_moves = Move(index, board.as_code(), recommendations, self)
+        self.last_moves.insert(
+            0, Move(index, board.as_code(), recommendations, self)
+        )  # Almacenamos la pila de movimiento
 
     def _ask_oracle(self, board):
         """
@@ -113,7 +117,7 @@ class HumanPlayer(Player):
         Si la columna solicitada no esta llena procede a jugar
         """
         while True:
-            raw = input("Selecciona una columna (o 'h' para ver las recomendaciones): ")
+            raw = input("Selecciona una columna ('h' para ver las recomendaciones): ")
             validation = (
                 _is_int(raw)
                 and _is_within_column_range(int(raw))
@@ -136,8 +140,6 @@ class HumanPlayer(Player):
 class ReportingPlayer(Player):
     def on_lose(self):
         """
-        Actualiza la ultima recomendacion del oraculo
+        Llama al oraculo para que revise la ultima jugada y la actualuces
         """
-        board_code = self.last_moves.board_code
-        position = self.last_moves.position
-        self._oracle.update_to_bad(board_code, self, position)
+        self._oracle.backtrack(self.last_moves)

@@ -116,12 +116,12 @@ class Game:
         El juego termina cuando hay un empate (tablero lleno) o cuando hay un ganador
         """
         is_game_over = False
-
-        if (
-            self.board.is_full()
-            or self.board.is_victory("x")
-            or self.board.is_victory("o")
-        ):
+        winner = self.match.get_winner(self.board)
+        if winner != None:
+            winner.on_win()
+            winner.opponent.on_lose()
+            is_game_over = True
+        elif self.board.is_full():
             is_game_over = True
         return is_game_over
 
@@ -130,7 +130,7 @@ class Game:
         Muestra por pantalla el ultimo movimiento
         """
         print(
-            f"\n{player.name} ({player.char}) has moved in column #{player.last_moves.position}\n"
+            f"\n{player.name} ({player.char}) has moved in column #{player.last_moves[0].position}\n"
         )
 
     def display_board(self):

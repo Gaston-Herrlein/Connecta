@@ -48,6 +48,13 @@ class BaseOracle:
             classification._set_classification(ColumnClassification.FULL)
         return classification
 
+    # Metodos para sobreescribie
+    def update_to_bad(self, move):
+        pass
+
+    def backtrack(self, list_on_moves):
+        pass
+
 
 class SmartOracle(BaseOracle):
     def get_recommendation(self, board, player):
@@ -87,20 +94,32 @@ class SmartOracle(BaseOracle):
         flag = False
         board_copy = deepcopy(board)
         board_copy.add(player.opponent.char, i)
-        print(board_copy)
         if board_copy.is_victory(player.opponent.char):
             flag = True
         return flag
 
     def no_good_options(self, board, player):
+        """
+        Analiza las recomendaciones y me devuelve un booleando
+        que refleja si exite una buena opcion para jugar
+        """
         recommendations = self.get_recommendation(board, player)
-        # for i in range(len(recommendations)):
-        #     if recommendations[i] != ColumnClassification.MAYBE or recommendations[i] != ColumnClassification.WIN:
-        #         good_option = False
-        is_any_maybe = recommendations.count(
+
+        is_everything_lost = recommendations.count(
+            ColumnRecommendation(0, ColumnClassification.LOSE)
+        )
+        is_not_win = recommendations.count(
+            ColumnRecommendation(0, ColumnClassification.WIN)
+        )
+        is_not_maybe = recommendations.count(
             ColumnRecommendation(0, ColumnClassification.MAYBE)
         )
-        return is_any_maybe == 0
+
+        return (
+            is_not_win == 0
+            or is_everything_lost >= 2
+            or (is_everything_lost == 1 and is_not_maybe == 0)
+        )
 
 
 class MemorizeOracle(SmartOracle):
@@ -132,11 +151,24 @@ class MemorizeOracle(SmartOracle):
 
 
 class LearningOracle(MemorizeOracle):
-    def update_to_bad(self, board_code, i, player):
-        key = self._make_key(board_code, player)
+    def update_to_bad(self, move):
+        key = self._make_key(move.board_code, move.player)
         recommendation = self.get_recommendation(
-            SquareBoard.fromBoardCode(board_code), player
+            SquareBoard.fromBoardCode(move.board_code), move.player
         )
-        recommendation[i] = ColumnRecommendation(i, ColumnClassification.BAD)
+        recommendation[move.position] = ColumnRecommendation(
+            move.position, ColumnClassification.BAD
+        )
 
         self._past_recommendations[key] = recommendation
+
+    def backtrack(self, list_on_moves):
+        """
+        Repasa todas las jugadas y si encuentra una en la que estaba todo perdido quiere
+        decir que la anterior tiene que ser actualizada
+        """
+        for move in list_on_moves:
+            self.update_to_bad(move)
+            board = SquareBoard.fromBoardCode(move.board_code._raw_code)
+            if not self.no_good_options(board, move.player):
+                break
